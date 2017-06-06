@@ -1,5 +1,7 @@
 import random, math
 
+DIFFICULTY = 2
+
 class Board:
     board = []
     def __init__(self, height, width, numMines):
@@ -28,22 +30,14 @@ class Board:
         for (y,x) in self.mines.keys():
             self.board[y][x] = 9
         for (y,x) in self.mines.keys():
-            test = 0
-            print(y,x)
             for i in range(y-1, y+2):
                 for j in range(x-1, x+2):
-                    print (i,j, test);
-                    test += 1
                     if i in range(height) and j in range(width) and (i,j) not in self.mines.keys():
                         self.board[i][j] += 1
 
     def __getitem__(self, x):
+        # Allow easier access to board elements as an array
         return self.board[x]
-
-    def debug(self):
-        # Print fully revealed board
-        for i in range(self.height):
-            print(self.board[i])
 
     def display(self):
         # Print Board state
@@ -69,8 +63,13 @@ class Board:
                         if self.board[i][j] not in self.revealed.keys():
                             self.reveal(i, j, visited)
 
+if DIFFICULTY == 0:
+    gameboard = Board(9,9,10)
+elif DIFFICULTY == 1:
+    gameboard = Board(16,16,40)
+else:
+    gameboard = Board(16,30,99)
 
-gameboard = Board(10,10,1)
 gameover = False
 
 #Game Loop
@@ -86,11 +85,7 @@ while not gameover:
             checkX = int(raw_input())
         except ValueError:
             print("Please enter a number! (0-{})".format(gameboard.width-1))
-        #DEBUG
-        if checkX == 420:
-            gameboard.debug()
-        #END DEBUG
-        elif not (checkX < 0 or checkX > gameboard.width-1):
+        if not (checkX < 0 or checkX > gameboard.width-1):
             break;
 
     # Get Y
